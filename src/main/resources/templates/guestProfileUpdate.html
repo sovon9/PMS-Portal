@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Guest Profile</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to external CSS -->
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="title">
+                <h1>Create Reservation</h1>
+            </div>
+            <div class="agent-info">
+                <span>Date and Time: <span th:text="${currentDate}">Placeholder Date and Time</span></span><br>
+                <span>Agent: <span th:text="${agentName}">Placeholder Agent Name</span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Section -->
+    <nav class="navigation">
+        <a th:href="@{/portal/home}"><button class="nav-button">Home</button></a>
+        <a th:href="@{/portal/create-res}" ><button class="nav-button">Create Reservation</button></a>
+        <a th:href="@{/portal/modify-res}" ><button class="nav-button">Quick Modify</button></a>
+        <a th:href="@{/portal/search-res}" ><button class="nav-button">Search Reservation</button></a>
+        <a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a>
+        <a th:href="@{/portal/room-management}"><button  class="nav-button">Room Management</button></a>
+         <a th:href="@{/portal/admin}" th:if="${agentRole.contains('ROLE_ADMIN')}"><button  class="nav-button admin-button">Administration</button></a>
+    </nav>
+
+    <!-- Main Content: Create Reservation Form -->
+    <main class="dashboard">
+
+		<!-- Error message display -->
+		<div style="color: red;" th:if="${error}">
+			<p th:text="${error}"></p>
+		</div>
+
+		<!-- Success message display -->
+		<div style="color: green;" th:if="${success}">
+			<p th:text="${success}"></p>
+		</div>
+
+		<form th:object="${guest}">
+            <table>
+				<tr>
+					<td><label for="gsGuestID">Guest ID:</label></td>
+					<td><input type="text" id="gsGuestID"
+						placeholder="Enter Guest ID"></td>
+				</tr>
+				<tr>
+                    <td><label for="gsFirstName">First Name:</label></td>
+                    <td><input type="text" id="gsFirstName"  placeholder="Enter First Name"></td>
+                </tr>
+                <tr>
+                    <td><label for="gsLastName">Last Name:</label></td>
+                    <td><input type="text" id="gsLastName"  placeholder="Enter Last Name"></td>
+                </tr>
+                <tr>
+                    <td><label for="gsbirthDate">BirthDate:</label></td>
+                    <td><input type="date" id="gsbirthDate" ></td>
+                </tr>
+                <tr>
+                    <td><label for="gsGuestPhone">Phone Number:</label></td>
+                    <td><input type="text" id="gsGuestPhone"  placeholder="Enter Phone Number"></td>
+                </tr>
+                 <tr>
+                    <td><label for="gsGuestEmail">Email:</label></td>
+                    <td><input type="text" id="gsGuestEmail"  placeholder="Enter Phone Number"></td>
+                </tr>
+                <tr>
+                    <td><label for="gsGuestPincode">Postal Code:</label></td>
+                    <td><input type="text" id="gsGuestPincode"  placeholder="Enter Postal Code">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button id="searchGuestSubmitBtn" type="button" class="nav-button">Search Guest</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </main>
+	<main class="dashboard">
+		<table>
+			<thead>
+				<tr>
+					<th>Guest ID</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>BirthDate</th>
+					<th>Phone Number</th>
+					<th>Postal Code</th>
+				</tr>
+			</thead>
+			<tbody id="tbody">
+					<!-- data will be filled from AJAX call -->
+			</tbody>
+		</table>
+	</main>
+	<!--  -->
+	<div id="guestSearchModal" class="modal">
+		<div class="modal-content">
+		<span class="close">&times;</span>
+		<h2>Edit Guest Profile</h2>
+			<form th:action="@{/save-guest}" th:object="${guest}" method="get">
+				<table>
+					<tr>
+					<td><label for="guestID">Guest ID:</label></td>
+					<td><input type="text" id="guestID" th:field="*{guestID}"
+						placeholder="Enter Guest ID"></td>
+				</tr>
+				<tr>
+                    <td><label for="firstName">First Name:</label></td>
+                    <td><input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter First Name"></td>
+                </tr>
+                <tr>
+                    <td><label for="lastName">Last Name:</label></td>
+                    <td><input type="text" id="lastName" th:field="*{lastName}" placeholder="Enter Last Name"></td>
+                </tr>
+                <tr>
+                    <td><label for="birthDate">BirthDate:</label></td>
+                    <td><input type="date" id="birthDate" th:field="*{birthDate}"></td>
+                </tr>
+                <tr>
+                    <td><label for="phno">Phone Number:</label></td>
+                    <td><input type="text" id="guestPhone" th:field="*{phno}" placeholder="Enter Phone Number"></td>
+                </tr>
+                <tr>
+                    <td><label for="phno">Email:</label></td>
+                    <td><input type="text" id="email" th:field="*{email}" placeholder="Enter Email"></td>
+                </tr>
+                <tr>
+                    <td><label for="postalcode">Postal Code:</label></td>
+                    <td><input type="text" id="guestPincode" th:field="*{address.postalcode}" placeholder="Enter Postal Code">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit" class="nav-button">Save Guest</button>
+                    </td>
+                </tr>
+				</table>
+			</form>
+		</div>
+	</div>
+	<!--  -->
+	<!-- Footer -->
+    <footer class="footer">
+        <!-- Optional Footer Content -->
+    </footer>
+</body>
+    <script th:src="@{/guestProfileUpdate.js}"></script> <!-- Link to JS file -->
+</html>

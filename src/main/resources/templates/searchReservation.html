@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Reservation</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to your external CSS -->
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="title">
+                <h1>Create Reservation</h1>
+            </div>
+            <div class="agent-info">
+                <span>Date and Time: <span th:text="${currentDate}">Placeholder Date and Time</span></span><br>
+                <a th:href="@{/portal/logout}" class="btn btn-light">Agent: <span th:text="${agentName}">Placeholder Agent Name</span></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Section -->
+    <nav class="navigation">
+        <a th:href="@{/portal/home}"><button class="nav-button">Home</button></a>
+        <a th:href="@{/portal/modify-res}" ><button class="nav-button">Quick Modify</button></a>
+        <a th:href="@{/portal/search-res}" ><button class="nav-button">Search Reservation</button></a>
+        <a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a>
+        <a th:href="@{/portal/guest-profile-update}" ><button class="nav-button">Guest Profile Update</button></a>
+        <a th:href="@{/portal/room-management}"><button  class="nav-button">Room Management</button></a>
+        <a th:href="@{/portal/admin}" th:if="${agentRole.contains('ROLE_ADMIN')}"><button  class="nav-button admin-button">Administration</button></a>
+    </nav>
+
+    <!-- Main Content: Create Reservation Form -->
+    <main class="dashboard">
+        <form th:action="@{/search-res/true}" th:object="${res}" method="get">
+            <table>
+                <tr>
+                    <td><label for="firstName">First Name:</label></td>
+                    <td><input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter First Name"></td>
+                </tr>
+                <tr>
+                    <td><label for="lastName">Last Name:</label></td>
+                    <td><input type="text" id="lastName" th:field="*{lastName}" placeholder="Enter Last Name"></td>
+                </tr>
+                <tr>
+                    <td><label for="status">Status:</label></td>
+                    <td><input type="text" id="status" th:field="*{status}" placeholder="Enter Status"></td>
+                </tr>
+                <tr>
+                    <td><label for="arriveDate">Arrival Date:</label></td>
+                    <td><input type="date" id="arriveDate" th:field="*{arriveDate}"></td>
+                </tr>
+                <tr>
+                    <td><label for="arriveTime">Arrival Time:</label></td>
+                    <td><input type="time" id="arriveTime" th:field="*{arriveTime}"></td>
+                </tr>
+                <tr>
+                    <td><label for="deptDate">Departure Date:</label></td>
+                    <td><input type="date" id="deptDate" th:field="*{deptDate}"></td>
+                </tr>
+                <tr>
+                    <td><label for="deptTime">Departure Time:</label></td>
+                    <td><input type="time" id="deptTime" th:field="*{deptTime}"></td>
+                </tr>
+                <tr>
+                    <td><label for="roomnum">Room Number:</label></td>
+                    <td><input type="number" id="roomnum" th:field="*{roomnum}" placeholder="Enter Room Number"></td>
+                </tr>
+                <tr>
+                    <td><label for="guestID">Guest ID:</label></td>
+                    <td><input type="text" id="guestID" th:field="*{guestID}" placeholder="Enter Guest ID"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit" class="nav-button">Search Reservation</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </main>
+	 <!-- Results Section -->
+    <section class="dashboard">
+        <table>
+            <thead>
+                <tr>
+                    <th>Reservation ID</th>
+                    <th>Guest ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Status</th>
+                    <th>Arrival Date</th>
+                    <th>Departure Date</th>
+                    <th>Room Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reservation : ${searchResult}">
+                    <td th:text="${reservation.resID}">Reservation ID</td>
+                    <td th:text="${reservation.guestID}">Guest ID</td>
+                    <td th:text="${reservation.firstName}">First Name</td>
+                    <td th:text="${reservation.lastName}">Last Name</td>
+                    <td th:text="${reservation.status}">Status</td>
+                    <td th:text="${reservation.arriveDate}">Arrival Date</td>
+                    <td th:text="${reservation.deptDate}">Departure Date</td>
+                    <td th:text="${reservation.roomnum}">Room Number</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <!-- Footer -->
+    <footer class="footer">
+        <!-- Optional Footer Content -->
+    </footer>
+</body>
+</html>
+ <!-- 
+<body>
+	<h1><nav><a th:href="@{/home}">Home</a></nav></h1>
+	<form th:action="@{/create-res}" th:object=${res} method="post">
+	<table>
+	    <tr>
+			<td><label>RR ID </label></td>
+			<td><input type="text" th:field="${res.rrID}" > </td>
+		</tr>
+		<tr>
+			<td><label>Guest ID </label></td>
+			<td><input type="text" th:field="${res.guestID}" > </td>
+		</tr>
+		<tr>
+			<td><label>Create Date </label></td>
+			<td><input type="date" th:field="${res.createDate}" > </td>
+		</tr>
+		<tr>
+			<td><label>Status </label></td>
+			<td><input type="text" th:field="${res.status}" > </td>
+		</tr>
+		<tr>
+			<td><label>Arrival Date </label></td>
+			<td><input type="date" th:field="${res.arriveDate}" > </td>
+		</tr>
+		<tr>
+			<td><label>Departure Date </label></td>
+			<td><input type="date" th:field="${res.deptDate}" > </td>
+		</tr>
+		<tr>
+			<td><label>Room Number </label></td>
+			<td><input type="text" th:field="${res.roomNum}" > </td>
+		</tr>
+		<tr>
+			<td><input type="submit" value="create" > </td>
+		</tr>
+	</table>
+	</form>
+</body> -->

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modify Reservation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to your external CSS -->
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="title">
+                <h1>Modify Reservation</h1>
+            </div>
+            <div class="agent-info">
+                <span>Date: <span th:text="${currentDate}">Placeholder Date</span></span><br>
+                <span>Agent: <span th:text="${agentName}">Placeholder Agent Name</span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Section -->
+    <nav class="navigation">
+        <a th:href="@{/portal/home}"><button class="nav-button">Home</button></a>
+        <a th:href="@{/portal/create-res}" ><button class="nav-button">Create Reservation</button></a>
+        <a th:href="@{/portal/search-res}" ><button class="nav-button">Search Reservation</button></a>
+        <a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a>
+        <a th:href="@{/portal/guest-profile-update}" ><button class="nav-button">Guest Profile Update</button></a>
+        <a th:href="@{/portal/room-management}"><button  class="nav-button">Room Management</button></a>
+        <a th:href="@{/portal/admin}" th:if="${agentRole.contains('ROLE_ADMIN')}"><button  class="nav-button admin-button">Administration</button></a>
+    </nav>
+
+    <!-- Main Content: Modify Reservation Form -->
+    <main class="dashboard">
+        <form th:action="@{/modify-res}" th:object="${res}" method="post">
+            <table>
+            	<tr>
+                    <td><label for="ResID">ResID:</label></td>
+                    <td><input type="text" id="resID" th:field="*{resID}" required readonly="readonly" class="disabled">
+                         <button type="button" class="btn btn-outline-secondary" id="searchRes">
+                             <i class="fas fa-search"></i>
+                         </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="firstName">First Name:</label></td>
+                    <td><input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter First Name"></td>
+                </tr>
+                <tr>
+                    <td><label for="lastName">Last Name:</label></td>
+                    <td><input type="text" id="lastName" th:field="*{lastName}" placeholder="Enter Last Name"></td>
+                </tr>
+                <tr>
+                    <td><label for="status">Status:</label></td>
+                    <td><input type="text" id="status" th:field="*{status}" required disabled="disabled"></td>
+                </tr> 
+                <tr>
+                    <td><label for="arriveDate">Arrival Date:</label></td>
+                    <td><input type="date" id="arriveDate" th:field="*{arriveDate}" ></td>
+                </tr>
+                <tr>
+                    <td><label for="arriveTime">Arrival Time:</label></td>
+                    <td><input type="time" id="arriveTime" th:field="*{arriveTime}" ></td>
+                </tr>
+                <tr>
+                    <td><label for="deptDate">Departure Date:</label></td>
+                    <td><input type="date" id="deptDate" th:field="*{deptDate}" ></td>
+                </tr>
+                <tr>
+                    <td><label for="deptTime">Departure Time:</label></td>
+                    <td><input type="time" id="deptTime" th:field="*{deptTime}" ></td>
+                </tr>
+                <tr>
+                    <td><label for="roomnum">Room Number:</label></td>
+                    <td><input type="number" id="roomnum" th:field="*{roomnum}" placeholder="Enter Room Number" >
+                    <div id="roomnumError" style="color: red; display: none;">Room number is required!</div></td>
+                </tr>
+                <tr>
+                    <td><label for="guestID">Guest ID:</label></td>
+                    <td><input type="text" id="guestID" th:field="*{guestID}" required disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit" class="btn btn-success">Modify Reservation</button>
+                        <button type="submit" id="doCheckIn" class="btn btn-warning" formaction="/portal/checkin">CheckIn Reservation</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </main>
+	<!-- res search modal  -->
+	<div id="resSearchModal" class="modal">
+	<div class="modal-content">
+	  <span id="close" class="close">&times;</span>
+	   <form>
+	      <div class="row">
+	          <label for="rsResID" class="col-sm-4 col-form-label">ResID</label>
+	          <div class="col-sm-8">
+	          <input type="text" id="rsResID" class="form-control">
+	          </div>
+	      </div>
+	      <div class="row">
+	          <label for="" class="col-sm-4 col-form-label">First Name</label>
+	          <div class="col-sm-8">
+	          <input type="text" id="firstName" class="form-control">
+	          </div>
+	      </div>
+	      <div class="row">
+	          <label for="" class="col-sm-4 col-form-label">Last Name</label>
+	          <div class="col-sm-8">
+	          <input type="text" id="lastName" class="form-control">
+	          </div>
+	      </div>
+	      <div class="row">
+	          <label for="" class="col-sm-4 col-form-label">Status</label>
+	          <div class="col-sm-8">
+	          <input type="text" id="status" class="form-control" disabled="disabled">
+	          </div> 
+	      </div>
+	      <div class="row">
+	          <label for="" class="col-sm-5 col-form-label">Arrival Date</label>
+	          <div class="col-sm-7">
+	          <input type="date" id="arrivalDate" class="form-control">
+	          </div>
+	      </div>
+	      <div class="row">
+	          <label for="" class="col-sm-5 col-form-label">Departure Date</label>
+	          <div class="col-sm-7">
+	          <input type="date" id="departureDate" class="form-control">
+	          </div>
+	      </div>
+	      <div class="row">
+	          <label for="roomNumber" class="col-sm-5 col-form-label">Room Number</label>
+	          <div class="col-sm-7">
+	          <input type="text" id="roomNumber" class="form-control">
+	          </div>
+	      </div>
+	      <div class="ml-4">
+	      		<button type="button" id="searchRes" class="btn btn-success" onclick="fetchResData()">Search</button>
+	      </div>
+	   </form>
+	   <table class="table">
+	       <thead>
+	            <tr>
+	               <th>Reservation ID</th>
+		            <th>First Name</th>
+		            <th>Last Name</th>
+		            <th>Status</th>
+		            <th>Arrival Date</th>
+		            <th>Departure Date</th>
+		            <th>Room Number</th>
+	            </tr>
+	       </thead>
+	       <tbody id="resInfoBody">
+	       
+	       </tbody>
+	   </table>
+	   </div>
+	</div>
+    <!-- Footer -->
+    <footer class="footer">
+        <h2>© SSPMS</h2>
+    </footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ <script>
+     var resSearch = document.getElementById("resSearchModal");
+     var searchRes = document.getElementById("searchRes");
+     var close = document.getElementById("close");
+     searchRes.onclick = function()
+     {
+     	resSearch.style.display="block";
+     }
+ 	 close.onclick=function()
+ 	 {
+ 		resSearch.style.display="none";
+ 	 }
+ 	 window.onclick = function(event) {
+ 	    if (event.target == resSearch) {
+ 	    	resSearch.style.display = "none";
+ 	    }
+ 	 }
+     async function fetchResData()
+     {
+    	var rsResID = document.getElementById("rsResID").value;
+    	const params = new URLSearchParams({resID: rsResID});
+     	const response = await fetch('/portal/fetchRes?'+params.toString(),{
+     		method: "GET",
+     		headers: {
+     			'Content-Type': 'application/json'
+     		}
+     	});
+   			var reservations = await response.json();
+   			var resInfoBody = document.getElementById("resInfoBody");
+   			resInfoBody.innerHTML="";
+   			reservations.forEach(function(res)
+   					{
+   						var row = document.createElement("tr");
+   						row.addEventListener('click', function() {
+   		                    rowClicked(res);
+   		                });
+   						row.innerHTML="<td>" + res.resID + "</td>" +
+                        "<td>" + res.firstName + "</td>" +
+                        "<td>" + res.lastName + "</td>" +
+                        "<td>" + res.status + "</td>" +
+                        "<td>" + res.arriveDate + "</td>" +
+                        "<td>" + res.deptDate + "</td>" +
+                        "<td>" + res.roomnum + "</td>";
+   			   			resInfoBody.appendChild(row);
+   					});
+     }
+     
+     function rowClicked(res)
+     {
+    	 document.getElementById("resID").value=res.resID;
+    	 document.getElementById("firstName").value=res.firstName;
+    	 document.getElementById("lastName").value=res.lastName;
+    	 document.getElementById("status").value=res.status;
+    	 document.getElementById("arriveDate").value=res.arriveDate;
+    	 document.getElementById("arriveTime").value=res.arriveTime;
+    	 document.getElementById("deptDate").value=res.deptDate;
+    	 document.getElementById("deptTime").value=res.deptTime;
+    	 document.getElementById("roomnum").value=res.roomnum;
+    	 document.getElementById("guestID").value=res.guestID;
+    	 resSearch.style.display="none";
+     }
+     var doCheckIn = document.getElementById("doCheckIn");
+     doCheckIn.onclick=function()
+     {
+    	 //alert("checkin");
+    	 var roomNumber = document.getElementById("roomnum");
+    	 var roomnumError = document.getElementById("roomnumError");
+    	 if(roomNumber.value === null || roomNumber.value === "")
+   		 {
+    		 roomNumber.focus();
+    		 event.preventDefault();
+    		 roomnumError.style.display = "block"; // Show error message
+   		 }
+    	 else
+   		 {
+    		 roomnumError.style.display = "none"; // Hide error message if input is valid
+   		 }
+     }
+ </script>
+</body>
+</html>
+ <!-- 
+<body>
+	<h1><nav><a th:href="@{/home}">Home</a></nav></h1>
+	<form th:action="@{/create-res}" th:object=${res} method="post">
+	<table>
+	    <tr>
+			<td><label>RR ID </label></td>
+			<td><input type="text" th:field="${res.rrID}" > </td>
+		</tr>
+		<tr>
+			<td><label>Guest ID </label></td>
+			<td><input type="text" th:field="${res.guestID}" > </td>
+		</tr>
+		<tr>
+			<td><label>Create Date </label></td>
+			<td><input type="date" th:field="${res.createDate}" > </td>
+		</tr>
+		<tr>
+			<td><label>Status </label></td>
+			<td><input type="text" th:field="${res.status}" > </td>
+		</tr>
+		<tr>
+			<td><label>Arrival Date </label></td>
+			<td><input type="date" th:field="${res.arriveDate}" > </td>
+		</tr>
+		<tr>
+			<td><label>Departure Date </label></td>
+			<td><input type="date" th:field="${res.deptDate}" > </td>
+		</tr>
+		<tr>
+			<td><label>Room Number </label></td>
+			<td><input type="text" th:field="${res.roomNum}" > </td>
+		</tr>
+		<tr>
+			<td><input type="submit" value="create" > </td>
+		</tr>
+	</table>
+	</form>
+</body> -->

@@ -1,0 +1,52 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <script>
+        async function login(event) {
+            event.preventDefault(); // Prevent the form submission
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('http://localhost:8282/RRMS-PORTAL/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                window.location.href = '/home';
+            } else {
+            	alert(response);
+            	// Update the error message in the UI
+                document.getElementById('error-message').innerText = 'Invalid username or password';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Login</h1>
+
+		<!-- This is the error message div to be updated by JavaScript -->
+    <div id="error-message" style="color: red;"></div>
+
+
+	<form onsubmit="login(event)" th:object="${login}">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" th:field="*{username}">
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" th:field="*{password}">
+        </div>
+        <div>
+            <button type="submit">Login</button>
+        </div>
+    </form>
+</body>
+</html>

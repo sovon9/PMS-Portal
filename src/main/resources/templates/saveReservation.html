@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1><nav><a th:href="@{/home}">Home</a></nav></h1>
+	<form th:action="@{/#}"  method="get">
+	<table>
+	    <tr>
+			<td><label>RR ID </label></td>
+			<td><input type="text" th:field="${res.rrID}" > </td>
+		</tr>
+		<tr>
+			<td><label>Guest ID </label></td>
+			<td><input type="text" th:field="${res.guestID}" > </td>
+		</tr>
+		<tr>
+			<td><label>Create Date </label></td>
+			<td><input type="date" th:field="${res.createDate}" > </td>
+		</tr>
+		<tr>
+			<td><label>Status </label></td>
+			<td><input type="text" th:field="${res.status}" > </td>
+		</tr>
+		<tr>
+			<td><label>Arrival Date </label></td>
+			<td><input type="date" th:field="${res.arriveDate}" > </td>
+		</tr>
+		<tr>
+			<td><label>Departure Date </label></td>
+			<td><input type="date" th:field="${res.deptDate}" > </td>
+		</tr>
+	</table>
+	</form>
+</body>
+</html>
