@@ -32,12 +32,11 @@ header {
     padding: 10px 0;
     display: flex;
     justify-content: space-around;
-    width: 100%;
 }
 
 .nav-button {
-    background-color: rgb(152, 203, 241);
-    color: white;
+    background-color: #007BFF;
+    color: #FFFFFF;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
@@ -51,15 +50,41 @@ header {
     background-color: #0056b3;
 }
 
+.container-wrapper
+{
+	font-family: var(--bs-font-sans-serif);
+	display:flex;
+	min-height: 80vh;
+	width:100%;
+	
+}
+.sidebar-container
+{
+	display: flex-column;
+	width:200px;
+	background-color: #1f921c;
+	width:20%;
+}
+.sidebar-nav .nav-link
+{
+	color: #FFFFFF;
+}
+.sidebar-nav .nav-link:hover {
+    background-color: #166714; /* Optional: change text color on hover for better visibility */
+}
 /* Center the container div (form) in the page */
-.container-wrapper {
+.admin-container {
+	background-color: #3e8f6b;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh; /* Height of the viewport minus header and footer */
+    padding-left: 20%;
+    padding-right: 20%;
+    width:80%;
+    /*min-height: 80vh; /* Height of the viewport minus header and footer */
 }
 
-.container {
+.registerUser-container {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
@@ -75,5 +100,4 @@ header {
     background-color: #333;
     color: #fff;
     text-align: center;
-    width: 100%;
 }

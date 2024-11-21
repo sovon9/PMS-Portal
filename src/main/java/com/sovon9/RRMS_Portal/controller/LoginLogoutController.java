@@ -75,7 +75,8 @@ public class LoginLogoutController
         jwtCookie.setSecure(true);   // Ensure cookie is only sent over HTTPS
         jwtCookie.setPath("/");      // Set the path for the cookie
         jwtCookie.setMaxAge(60 * 60); // Token valid for 1 day
-
+        // Set SameSite attribute to prevent cross-site requests
+        jwtCookie.setAttribute("SameSite", "Strict");
         response.addCookie(jwtCookie);
 
         return ResponseEntity.ok("Login successful");
@@ -89,6 +90,8 @@ public class LoginLogoutController
         jwtCookie.setSecure(true);  // Use true if using HTTPS
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0); // Set expiry to zero to delete the cookie
+        // Set SameSite attribute to prevent cross-site requests
+        jwtCookie.setAttribute("SameSite", "Strict");
         
         // Add the cookie to the response
         response.addCookie(jwtCookie);

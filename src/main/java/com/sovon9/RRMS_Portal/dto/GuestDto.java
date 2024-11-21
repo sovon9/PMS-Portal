@@ -2,11 +2,14 @@ package com.sovon9.RRMS_Portal.dto;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class GuestDto {
 
 	private Long guestID;
 	private String firstName;
 	private String lastName;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birthDate;
 	private LocalDate lastStay;// can be created as a seperate class to store last stay details
 	private String phno;

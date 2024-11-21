@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Reservation</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="/styles.css"> <!-- Link to external CSS -->
 </head>
@@ -15,8 +15,14 @@
                 <h1>Create Reservation</h1>
             </div>
             <div class="agent-info">
-                <span>Date and Time: <span th:text="${currentDate}">Placeholder Date and Time</span></span><br>
-                <a th:href="@{/portal/logout}" class="btn btn-light">Agent: <span th:text="${agentName}">Placeholder Agent Name</span></a>
+                <span>Date: <span th:text="${currentDate}">Placeholder Date</span></span><br>
+				<div class="dropdown">
+					<button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">Agent: <span
+							th:text="${agentName}">Placeholder Agent Name</span></button>
+					<div class="dropdown-menu">
+						<a th:href="@{/portal/logout}" class="dropdown-item">Logout</a>
+					</div>	
+				</div>
             </div>
         </div>
     </header>
@@ -24,7 +30,7 @@
     <!-- Navigation Section -->
     <nav class="navigation">
         <a th:href="@{/portal/home}"><button class="nav-button">Home</button></a>
-        <a th:href="@{/portal/modify-res}" ><button class="nav-button">Quick Modify</button></a>
+        <a th:href="@{/portal/modify-res}" ><button class="nav-button">Modify Reservation</button></a>
         <a th:href="@{/portal/search-res}" ><button class="nav-button">Search Reservation</button></a>
         <a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a>
         <a th:href="@{/portal/guest-profile-update}" ><button class="nav-button">Guest Profile Update</button></a>
@@ -33,82 +39,130 @@
     </nav>
 
     <!-- Main Content: Create Reservation Form -->
-    <main class="dashboard">
-
+    <div class="createRes-container">
+		<div>
 		<!-- Error message display -->
 		<div style="color: red;" th:if="${error}">
 			<p th:text="${error}"></p>
 		</div>
 
 		<!-- Success message display -->
-		<div style="color: green;" th:if="${success}">
+		<div style="color: green; background-color: lime;" th:if="${success}">
 			<p th:text="${success}"></p>
 		</div>
-
+		</div>
 		<form th:action="@{/portal/create-res}" th:object="${res}" method="post">
-            <table>
-                <tr>
-                    <td><label for="firstName">First Name:</label></td>
-                    <td><input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter First Name" required></td>
-                </tr>
-                <tr>
-                    <td><label for="lastName">Last Name:</label></td>
-                    <td><input type="text" id="lastName" th:field="*{lastName}" placeholder="Enter Last Name" required></td>
-                </tr>
-                <tr>
-                    <td><label for="status">Status:</label></td>
-                    <td><input type="text" id="status" th:field="*{status}" required disabled="disabled"></td>
-                </tr>
-                <tr>
-                    <td><label for="arriveDate">Arrival Date:</label></td>
-                    <td><input type="date" id="arriveDate" th:field="*{arriveDate}" required></td>
-                </tr>
-                <tr>
-                    <td><label for="arriveTime">Arrival Time:</label></td>
-                    <td><input type="time" id="arriveTime" th:field="*{arriveTime}" required></td>
-                </tr>
-                <tr>
-                    <td><label for="deptDate">Departure Date:</label></td>
-                    <td><input type="date" id="deptDate" th:field="*{deptDate}" required></td>
-                </tr>
-                <tr>
-                    <td><label for="deptTime">Departure Time:</label></td>
-                    <td><input type="time" id="deptTime" th:field="*{deptTime}" required></td>
-                </tr>
-                <tr>
-                    <td><label for="email">Email:</label></td>
-                    <td><input type="email" id="email" th:field="*{email}" ></td>
-                </tr>
-                <tr>
-					<td><label for="ratePlan">Rate Plan:</label></td>
-					<td>
-						 <select id="ratePlan" th:field="*{ratePlan}" required>
+		<div class="createRes-card">
+            <div class="createRes-card-label">
+	            <div>
+	            	<label for="firstName">First Name:</label>
+	            </div>
+	             <div>
+	            	 <label for="lastName">Last Name:</label>
+	            </div>
+	             <div>
+	            	 <label for="status">Status:</label>
+	            </div>
+	             <div>
+	            	<label for="arriveDate">Arrival Date:</label>
+	            </div>
+	             <div>
+	            	<label for="arriveTime">Arrival Time:</label>
+	            </div>
+	            <div>
+	                <label for="deptDate">Departure Date:</label>
+	            </div>
+	            <div>
+	            	<label for="deptTime">Departure Time:</label>
+	            </div>
+	            <div>
+	                <label for="email">Email:</label>
+	            </div>
+	            <div>
+	            	<label for="ratePlan">Rate Plan:</label>
+	            </div>
+	            <div>
+	            	<label for="roomnum">Room Number:</label>
+	            </div>
+	            <div>
+	            	<label for="guestID">Guest ID:</label>
+	            </div>
+	            <div>
+	            	<label for="guestID">Payment Type:</label>
+	            </div>
+				<div>
+					<label for="cardNumber">Card Number:</label>
+				</div>
+				<div>
+					<label for="cardExpiry">Card Expiry:</label>
+				</div>
+				</div>
+            
+            <div class="createRes-card-field">
+                <div>
+                	<input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter First Name" required>
+                </div>
+                <div>
+                	<input type="text" id="lastName" th:field="*{lastName}" placeholder="Enter Last Name" required>
+                </div>
+                 <div>
+                	 <input type="text" id="status" th:field="*{status}" required disabled="disabled">
+                </div>
+                <div>
+                	<input type="date" id="arriveDate" th:field="*{arriveDate}" required>
+                </div>
+                 <div>
+                	<input type="time" id="arriveTime" th:field="*{arriveTime}" required>
+                </div>
+                <div>
+                    <input type="date" id="deptDate" th:field="*{deptDate}" required>
+                </div>
+                <div>
+                   <input type="time" id="deptTime" th:field="*{deptTime}" required>
+                </div>
+                <div>
+                   <input type="email" id="email" th:field="*{email}" >
+                </div>
+                <div>
+                	<select id="ratePlan" th:field="*{ratePlan}" required>
 							<option value="">Select Rate Plan</option>
 							<option th:each="plan : ${ratePlans}" th:value="${plan.ratePlan}"
 								th:text="${plan.ratePlan}"></option>
 					     </select>
-				    </td>
-				</tr>
-                <tr>
-                    <td><label for="roomnum">Room Number:</label></td>
-                    <td><input type="number" id="roomnum" th:field="*{roomnum}" placeholder="Enter Room Number" ></td>
-                </tr>
-                <tr>
-                    <td><label for="guestID">Guest ID:</label></td>
-                    <td><input type="text" id="guestID" th:field="*{guestID}" placeholder="Enter Guest ID" disabled="disabled">
-                    	 <button type="button" id="searchGuestBtn" class="btn btn-outline-secondary">
-                    	      <i class="fas fa-search"></i>
+                </div>
+                <div>
+                	<input type="number" id="roomnum" th:field="*{roomnum}" placeholder="Enter Room Number" >
+                </div>
+                <div class="search-container">
+                	<input type="text" id="guestID" th:field="*{guestID}" placeholder="Enter Guest ID" disabled="disabled">
+                	<button type="button" id="searchGuestBtn" class="btn btn-outline-secondary">
+                    	      <span class="material-icons">search</span>
                     	 </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button type="submit" class="nav-button">Create Reservation</button>
-                    </td>
-                </tr>
-            </table>
+                </div>
+				<div>
+					<select id="paymentType" th:field="*{paymentType}" onchange="paymentTypeValidation(this)" required>
+						<option value="">Select Payment Type</option>
+						<option value="CC">Credit Card</option>
+						<option value="DC">Debit Card</option>
+						<option value="CA">Cash</option>
+						<option value="BT">Bank Transfer</option>
+					</select>
+				 </div>
+				 <div>
+					<input type="text" id="cardNumber" 
+						placeholder="Enter Card Number" maxlength="16" pattern="\d{16}" th:field="*{cardNumber}" disabled
+						onchange="enableDisbledCCExpiry(this)" onkeypress="return validateCardNum(event)" required>
+				 </div>
+				 <div>
+					<input type="month" id="cardExpiry" th:field="*{cardExpiry}" disabled required>
+				 </div>
+				<div>
+	            	<button type="submit" class="nav-button">Create Reservation</button>
+                </div>
+            </div>
+        </div>
         </form>
-    </main>
+    </div>
     <!-- Guest Search Model Box -->
 	<div id="guestSearchModal" class="modal">
 		<div class="modal-content">
@@ -168,48 +222,52 @@
 	</div>
 	<!-- Footer -->
     <footer class="footer">
-        <!-- Optional Footer Content -->
+       <div class="footer-container">
+			<div class="row">
+				<div class="col-lg-4 col-md-6">
+					<h5>About Us</h5>
+					<p>We provide top-notch property management services for your
+						hotel and lodging needs.</p>
+				</div>
+				<div class="col-lg-2 col-md-6">
+					<h5>Quick Links</h5>
+					<ul class="list-unstyled">
+						<li><a href="/terms" class="text-white">Terms of Service</a></li>
+						<li><a href="/privacy" class="text-white">Privacy Policy</a></li>
+						<li><a href="/contact" class="text-white">Contact Us</a></li>
+						<li><a href="/support" class="text-white">Support</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<h5>Contact Information</h5>
+					<p>
+						Email: <span th:text="${footer.email}"></span>
+					</p>
+					<p>
+						Phone: <span th:text="${footer.phone}"></span>
+					</p>
+					<p>
+						Address: <span th:text="${footer.address}"></span>
+					</p>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<h5>Follow Us</h5>
+					<a href="#"><img src="/icons/facebook.svg" alt="Facebook"
+						width="24"></a> <a href="#"><img src="/icons/twitter.svg"
+						alt="Twitter" width="24"></a> <a
+						href="https://www.linkedin.com/in/sovon-singha-2b8025313/"><img
+						src="/icons/linkedin.svg" alt="LinkedIn" width="24"></a>
+				</div>
+			</div>
+			<div class="row mt-4">
+				<div class="col text-center">
+					<small>&copy; 2024 PMS. All Rights Reserved.</small>
+				</div>
+			</div>
+		</div>
     </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-    <script th:src="@{/guestsearch.js}"></script> <!-- Link to JS file -->
+    <script th:src="@{/guestsearch.js}" type="text/javascript"></script> <!-- Link to JS file -->
+    <script th:src="@{/validation.js}" type="text/javascript"></script>
 </html>
- <!-- 
-<body>
-	<h1><nav><a th:href="@{/home}">Home</a></nav></h1>
-	<form th:action="@{/create-res}" th:object=${res} method="post">
-	<table>
-	    <tr>
-			<td><label>RR ID </label></td>
-			<td><input type="text" th:field="${res.rrID}" > </td>
-		</tr>
-		<tr>
-			<td><label>Guest ID </label></td>
-			<td><input type="text" th:field="${res.guestID}" > </td>
-		</tr>
-		<tr>
-			<td><label>Create Date </label></td>
-			<td><input type="date" th:field="${res.createDate}" > </td>
-		</tr>
-		<tr>
-			<td><label>Status </label></td>
-			<td><input type="text" th:field="${res.status}" > </td>
-		</tr>
-		<tr>
-			<td><label>Arrival Date </label></td>
-			<td><input type="date" th:field="${res.arriveDate}" > </td>
-		</tr>
-		<tr>
-			<td><label>Departure Date </label></td>
-			<td><input type="date" th:field="${res.deptDate}" > </td>
-		</tr>
-		<tr>
-			<td><label>Room Number </label></td>
-			<td><input type="text" th:field="${res.roomNum}" > </td>
-		</tr>
-		<tr>
-			<td><input type="submit" value="create" > </td>
-		</tr>
-	</table>
-	</form>
-</body> -->

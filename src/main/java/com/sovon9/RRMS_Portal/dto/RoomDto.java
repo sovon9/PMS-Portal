@@ -10,6 +10,14 @@ public class RoomDto
 	{
 		super();
 	}
+	
+	public RoomDto(int roomNum, String ratePlan)
+	{
+		super();
+		this.roomNum = roomNum;
+		this.ratePlan = ratePlan;
+	}
+
 	public int getRoomNum()
 	{
 		return roomNum;

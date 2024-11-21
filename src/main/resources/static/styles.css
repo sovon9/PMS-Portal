@@ -60,15 +60,20 @@ header {
 }
 
 .dashboard {
-    padding: 20px;
     display:flex;
     flex-direction: column;
+    padding: 20px;
     min-height: 80vh;
+    font-family: var(--bs-font-sans-serif);
+    font-weight: bold;
 }
 
 .dashboard table {
     width: 100%;
-    border-collapse: collapse;
+    /*border-collapse: collapse;*/
+    border-radius : 0.2em !important; /*for rounded borders*/
+    overflow: hidden; /*for rounded borders*/
+    box-shadow: 0 8px 6px rgba(0, 0, 0, 0.5);
 }
 
 .dashboard th, .dashboard td {
@@ -80,7 +85,188 @@ header {
     background-color: rgb(152, 203, 241);
     text-align: left;
 }
+#dashboardFilter
+{
+	font-weight: bold;
+}
+/**/
+.chart-container
+{
+	display: flex;
+	background-color: rgba(0, 0, 0, 0.3);
+	padding: 1em;
+	border-radius:0.4em;
+	color: #FFFFFF;
+	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.5);
+}
+#guestStatusChart
+{
+	height:400px !important;
+	width:400px !important;
+}
+/**/
+/* createRes start*/
+.createRes-container {
+    display:flex;
+    flex-direction:column;
+    padding: 20px;
+    min-height: 80vh;
+    align-items: center;
+    background-color: #E8D8B9;/*#3e8f6b;*/
+    font-family: var(--bs-font-sans-serif);
+    font-weight: bold;
+}
+.createRes-card
+{
+	display: flex;
+	justify-content:space-between;
+	min-height:60vh;
+	min-width:600px;
+	background-color: #4A6572;
+    border-radius:8px;
+    overflow:hidden;
+	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.5);
+	padding:10px;
+}
 
+.search-container
+{
+	display: flex;
+	justify-content: space-between;
+	height:2.7em;
+}
+.createRes-card-label, .createRes-card-field
+{
+	display :flex;
+	flex-direction: column;
+	width:48%;
+	height:100%;
+	margin-top: 2em;
+	white-space: nowrap;
+	align-items: flex-start; 
+	justify-content: center;
+	color: white;
+}
+
+.createRes-card-label div {
+    padding: 0.8em 0;  
+    margin-bottom: 0.0em;
+    margin-left: 1em; 
+}
+
+.createRes-card-field div {
+    padding: 0.4em 0; 
+    margin-bottom: 0.55em; 
+}
+.createRes-card-field div input{
+    border-radius: 0.3em;
+}
+
+#createGuestBtn {
+    height: 40px;
+}
+/* createRes end */
+/*modify res start*/
+.modifyRes-master-container
+{
+	display: flex;
+	justify-content: flex-start;
+	flex: 0 0 30%; /* Do not grow, do not shrink, fixed width of 30% */
+	background-color:  #4A6572;
+	font-family: var(--bs-font-sans-serif);
+	font-weight: bold;
+	
+}
+.sidebar-nav .nav-link
+{
+	color: #FFFFFF;
+}
+.sidebar-nav .nav-link:hover {
+    background-color: #166714; /* Optional: change text color on hover for better visibility */
+}
+.nav-item button.active {
+    background-color: #166714;  /* Active color, e.g., blue */
+    color: white;  /* Text color when active */
+}
+.modifyRes-container
+{
+	flex:1;
+	display: flex;
+	flex-direction:column;
+	flex-wrap:wrap;
+	align-content: center;
+	justify-content: center;
+	background-color: #E8D8B9;
+	min-height: 80vh;
+}
+.modifyRes-form
+{
+	display: flex;
+	flex-direction:column;
+	justify-content:flex-start;
+	min-height: 60vh;
+	min-width:600px;
+	border-radius:8px;
+    overflow:hidden;
+	background-color: #4A6572;
+	padding:10px;
+	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.5);
+	font-weight: bold;
+}
+.modifyRes-form-response
+{
+	display: flex;
+}
+.modifyRes-form-items
+{
+	display: flex;
+	overflow: hidden;
+	justify-content:space-between;
+	color:white;
+}
+.modifyRes-form-items-label
+{
+	display: flex;
+	flex-direction: column;
+	width: 30%;
+	height:100%;
+	/*background-color: grey;*/
+	align-items: flex-start;
+	justify-content: center; 
+}
+.modifyRes-form-items-field
+{
+	display: flex;
+	flex-direction: column;
+	width: 65%;
+	height:100%;
+	/*background-color: green;*/
+	align-items: flex-start; 
+	justify-content: center;
+}
+.modifyRes-form-items-label div {
+    padding: 0.8em 0;  
+    margin-bottom: 0.0em;
+    margin-left: 1em; 
+}
+
+.modifyRes-form-items-field div {
+    padding: 0.2em 0; 
+    margin-bottom: 0.85em; 
+    margin-left: 2em; 
+}
+.modifyRes-form-items-field div input{
+    border-radius: 0.2em;
+}
+.modifyRes-form-buttons
+{
+	display: flex;
+	justify-content: space-between;
+}
+/* modify res end*/
+/**/
+
+/**/
 .footer {
     padding: 20px;
     background-color: #333;

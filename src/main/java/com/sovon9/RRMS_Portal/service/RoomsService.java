@@ -19,6 +19,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.sovon9.RRMS_Portal.dto.RoomDto;
 
+import io.github.resilience4j.retry.annotation.Retry;
+
 @Service
 public class RoomsService
 {
@@ -36,7 +38,8 @@ public class RoomsService
 		return roomDtos.stream().filter(rp->rp.getRatePlan().equals(ratePlan)).map(rp->rp.getRoomNum()).collect(Collectors.toList());
 	}
 	
-	public List<RoomDto> getAllRateplanRoomData(String jwtToken)
+	@Retry(name="retry-Rateplan", fallbackMethod = "fallBackRateplanRoomData")
+	public List<RoomDto> getAllAvlRateplanRoomData(String jwtToken)
 	{
 		roomDtos = new ArrayList<>();
 		try
@@ -46,7 +49,7 @@ public class RoomsService
 		    HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 		    
 		    ResponseEntity<RoomDto[]> responseEntity = restTemplate
-	                .exchange(ROOM_MGMT_SERVICE_URL + "getAllAvailableRooms", HttpMethod.GET, httpEntity, RoomDto[].class);
+	                .exchange(ROOM_MGMT_SERVICE_URL + "getAllAvailableRooms/roomStatus/VC", HttpMethod.GET, httpEntity, RoomDto[].class);
 			if (responseEntity.getStatusCode() == HttpStatus.OK)
 			{
 				roomDtos = List.of(responseEntity.getBody());
@@ -57,5 +60,33 @@ public class RoomsService
 			LOGGER.error("Error fetching RatePlan RoomData : "+e.getMessage());
 		}
 		return roomDtos;
+	}
+	
+	public List<RoomDto> fallBackRateplanRoomData(Exception exception)
+	{
+		return List.of();
+	}
+
+	public List<RoomDto> getAllBlkdRateplanRoomData(String jwtToken)
+	{
+		List<RoomDto> blkdRoomList = new ArrayList<>();
+		try
+		{
+			 HttpHeaders headers = new HttpHeaders();
+		        headers.set("Authorization", "Bearer " + jwtToken);
+		    HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+		    
+		    ResponseEntity<RoomDto[]> responseEntity = restTemplate
+	                .exchange(ROOM_MGMT_SERVICE_URL + "getAllAvailableRooms/roomStatus/VB", HttpMethod.GET, httpEntity, RoomDto[].class);
+			if (responseEntity.getStatusCode() == HttpStatus.OK)
+			{
+				blkdRoomList = List.of(responseEntity.getBody());
+				LOGGER.error("Successfully fetched room data: " + roomDtos);
+			}
+		}
+		catch (ResourceAccessException e) {
+			LOGGER.error("Error fetching RatePlan RoomData : "+e.getMessage());
+		}
+		return blkdRoomList;
 	}
 }

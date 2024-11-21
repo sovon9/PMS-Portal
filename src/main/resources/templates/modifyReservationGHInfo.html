@@ -12,7 +12,7 @@
     <header>
         <div class="header-content">
             <div class="title">
-                <h1>Modify Reservation |   <span th:text="${res.firstName}" id="title-name"></span></h1>
+                <h1>Modify Reservation |<span th:text="${guest.firstName}"></span></h1>
             </div>
             <div class="agent-info">
                 <span>Date: <span th:text="${currentDate}">Placeholder Date</span></span><br>
@@ -43,12 +43,12 @@
  	<div class="sidebar-container">
 			<ul class="sidebar-nav nav flex-column p-3">
 				<li class="nav-item p-2">
-				     <a class="nav-link" id="resdata">
+				     <button class="nav-link" id="resdata">
 				         <span class="material-icons">event</span>&nbsp;&nbsp;Reservation Data
-				     </a>
+				     </button>
 				</li>
 				<li class="nav-item p-2" id="guestData">
-				     <button class="nav-link">
+				     <button class="nav-link active">
 				       <span class="material-icons">person</span>&nbsp;&nbsp;Guest Information
 				     </button>
 				</li>
@@ -65,94 +65,69 @@
 				<div style="color: green; background-color: lime;" th:if="${success}">
 					<p th:text="${success}"></p>
 				</div>
+				<input type="text" id="resID" th:value="${resID}" style="display:none;">
 			</div>
-		    <form th:action="@{/portal/modify-res}" th:object="${res}" method="post">
+		    <form th:action="@{/portal/save-guest}" th:object="${guest}" method="post">
     			<div class="modifyRes-form-items">
-		            <div class="modifyRes-form-items-label">
-		            	   <div>
-		            	   		<label for="ResID">ResID:</label>
-		            	   </div>
-		            	   <div>
-		            	   		<label for="firstName">First Name:</label>
-		            	   </div>
-		            	   <div>
-		            	   		<label for="lastName">Last Name:</label>
-		            	   </div>
-		            	   <div>
-		            	   		<label for="status">Status:</label>
-		            	   </div>
-		            	   <div>
-		            	   		<label for="arriveDate">Arrival Date:</label>
-		            	   </div>
-		            	    <div>
-		            	   		<label for="arriveTime">Arrival Time:</label>
-		            	   </div>
-		            	   <div>
-		            	   		<label for="deptDate">Departure Date:</label>
-		            	   </div>
-		            	    <div>
-		            	   		<label for="deptTime">Departure Time:</label>
-		            	   </div>
+					<div class="modifyRes-form-items-label">
+						<div>
+							<label for="gsGuestID">Guest ID:</label>
+						</div>
+						<div>
+							<label for="gsFirstName">First Name:</label>
+						</div>
+						<div>
+							<label for="gsLastName">Last Name:</label>
+						</div>
+						<div>
+							<label for="gsbirthDate">BirthDate:</label>
+						</div>
+						<div>
+							<label for="gsGuestPhone">Phone Number:</label>
+						</div>
+						<div>
+							<label for="gsGuestEmail">Email:</label>
+						</div>
+						<div>
+							<label for="gsGuestPincode">Postal Code:</label>
+						</div>
+					</div>
+					<div class="modifyRes-form-items-field">
+						<div>
 							<div>
-								<label for="ratePlan">Rate Plan:</label>
+								<input type="text" id="gsGuestID" th:field="*{guestID}"
+									placeholder="Enter Guest ID">
 							</div>
 							<div>
-		            	   		<label for="roomnum">Room Number:</label>
-		            	   </div>
-		            	   <div>
-		            	   		<label for="guestID">Guest ID:</label>
-		            	   </div>
-		            </div>
-		            <div class="modifyRes-form-items-field">
-		            	<div>
-		            		<div>
-		            			<input type="text" id="resID" th:field="*{resID}" required readonly="readonly" class="disabled">
-		                         <button type="button" class="btn btn-outline-secondary" id="searchRes">
-		                             <span class="material-icons">search</span>
-		                         </button>
-		            		</div>
-		            		<div>
-		            			<input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter First Name">
-		            		</div>
-		            		<div>
-		            			<input type="text" id="lastName" th:field="*{lastName}" placeholder="Enter Last Name">
-		            		</div>
-		            		<div>
-		            			<input type="text" id="status" th:field="*{status}" required disabled="disabled">
-		            		</div>
-		            		<div>
-		            			<input type="date" id="arriveDate" th:field="*{arriveDate}" >
-		            		</div>
-		            		<div>
-		            			<input type="time" id="arriveTime" th:field="*{arriveTime}" >
-		            		</div>
-		            		<div>
-		            			<input type="date" id="deptDate" th:field="*{deptDate}" >
-		            		</div>
-		            		<div>
-		            			<input type="time" id="deptTime" th:field="*{deptTime}" >
-		            		</div>
-							<div>
-								<select id="ratePlan" th:field="*{ratePlan}" required>
-									<option value="">Select Rate Plan</option>
-									<option th:each="plan : ${ratePlans}"
-										th:value="${plan.ratePlan}" th:text="${plan.ratePlan}"></option>
-								</select>
+								<input type="text" id="gsFirstName" th:field="*{firstName}"
+									placeholder="Enter First Name">
 							</div>
 							<div>
-		            			<input type="number" id="roomnum" th:field="*{roomnum}" placeholder="Enter Room Number" >
-		            			<div id="roomnumError" style="color: red; display: none;">Room number is required!</div>
-		            		</div>
-		            		<div>
-		            			<input type="text" id="guestID" th:field="*{guestID}" required disabled="disabled">
-		            		</div>
-		            		
-		            	</div>
-		            </div>
-	        	</div>
+								<input type="text" id="gsLastName" th:field="*{lastName}"
+									placeholder="Enter Last Name">
+							</div>
+							<div>
+								<input type="date" id="gsbirthDate" th:field="*{birthDate}">
+							</div>
+							<div>
+								<input type="text" id="gsGuestPhone" th:field="*{phno}"
+									placeholder="Enter Phone Number">
+							</div>
+							<div>
+								<input type="text" id="gsGuestEmail" th:field="*{email}"
+									placeholder="Enter Email">
+							</div>
+							<div>
+								<input type="text" id="gsGuestPincode"
+									th:field="*{address.postalcode}"
+									placeholder="Enter Postal Code">
+							</div>
+
+						</div>
+					</div>
+					</div>
 		            <div class="modifyRes-form-buttons">
-		                        <button type="submit" class="btn btn-success">SAVE</button>
-		                        <button type="submit" id="doCheckIn" class="btn btn-warning" th:if="${ckin}" formaction="/portal/checkin" onclick="doCheckIn">Check-In</button>
+		                        <button type="submit" class="btn btn-success">Save</button>
 		            </div>
 		    </form>
         </div>
@@ -333,7 +308,6 @@
     	 document.getElementById("deptTime").value=res.deptTime;
     	 document.getElementById("roomnum").value=res.roomnum;
     	 document.getElementById("guestID").value=res.guestID;
-    	 document.getElementById("title-name").innerText=res.firstName;
     	 resSearch.style.display="none";
      }
      
@@ -354,25 +328,19 @@
    		 }
      }
      
-     var guestData = document.getElementById("guestData");
-     guestData.onclick=function(){
-    	 var guestID = document.getElementById("guestID").value.trim();
-    	 var resID = document.getElementById("resID").value;
-    	 if(!guestID)
+     var resData=document.getElementById("resdata");
+     resData.onclick=function()
+     {
+    	 var resID=document.getElementById("resID").value.trim();
+    	 if(!resID)
    		 {
-   		 	alert("No data");
+   		 	alert("Please provide a Reservation ID.");
    		 }
     	 else
    		 {
-   	 		window.location.href="/portal/guest-info/guestID/"+guestID+"/resID/"+resID;
+   	 		window.location.href="/portal/modify-res/resID/"+resID;
    		 }
-    	 /*const response = await fetch("/portal/search-guest/guestID/"+guestID,
-    			 {
-    		 		 method:"GET",
-    		 		 headers:{"Content-Type":"application/json"},
-    			 });*/
      }
-     
  </script>
 </body>
 </html>

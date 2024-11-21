@@ -6,6 +6,10 @@ import java.time.LocalTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 public class Reservation implements Serializable{
 
 	/**
@@ -31,6 +35,13 @@ public class Reservation implements Serializable{
 	private String email;
 	private String ratePlan;
 	private Integer roomnum;
+	// payment data
+	@NotBlank
+	private String paymentType;
+	@Pattern(regexp = "\\d{16}", message = "Card number must be 16 digits")
+    private String cardNumber;
+	@FutureOrPresent(message = "Card expiry must be in the future or present")
+    private String cardExpiry;
 
 	public Reservation() {
 		super();
@@ -138,6 +149,30 @@ public class Reservation implements Serializable{
 	public void setRatePlan(String ratePlan)
 	{
 		this.ratePlan = ratePlan;
+	}
+	public String getPaymentType()
+	{
+		return paymentType;
+	}
+	public void setPaymentType(String paymentType)
+	{
+		this.paymentType = paymentType;
+	}
+	public String getCardNumber()
+	{
+		return cardNumber;
+	}
+	public void setCardNumber(String cardNumber)
+	{
+		this.cardNumber = cardNumber;
+	}
+	public String getCardExpiry()
+	{
+		return cardExpiry;
+	}
+	public void setCardExpiry(String cardExpiry)
+	{
+		this.cardExpiry = cardExpiry;
 	}
 	
 }

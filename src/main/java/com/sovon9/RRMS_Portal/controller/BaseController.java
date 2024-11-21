@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import com.sovon9.RRMS_Portal.service.FooterProperties;
+import com.sovon9.RRMS_Portal.config.FooterProperties;
 
 import jakarta.servlet.http.HttpServletRequest;
 

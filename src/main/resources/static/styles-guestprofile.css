@@ -1,0 +1,59 @@
+.modifyRes-container
+{
+	display: flex;
+	flex-direction:column;
+	flex-wrap:wrap;
+	align-content: center;
+	justify-content: flex-start;
+	background-color: #E8D8B9;
+	font-family: var(--bs-font-sans-serif);
+	min-height: 80vh;
+}
+.gp-dashboard {
+    padding: 20px;
+    display:flex;
+    flex-direction: column;
+}
+
+.gp-dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gp-dashboard th, .gp-dashboard td {
+    border: 1px solid rgb(0, 0, 0);
+    padding: 8px;
+}
+
+.gp-dashboard th {
+    background-color: rgb(152, 203, 241);
+    text-align: left;
+}
+
+.guestProfile-form
+{
+	display: flex;
+	flex-direction:column;
+	justify-content:flex-start;
+	min-height: auto;
+	min-width:600px;
+	border-radius:8px;
+    overflow:hidden;
+	background-color: #4A6572;
+	padding:10px;
+	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.5);
+	font-weight: bold;
+}
+
+.modifyRes-form-searchResult
+{
+	display: flex;
+}
+
+.dashboard
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	max-height: 10px;
+}

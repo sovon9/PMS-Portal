@@ -1,9 +1,15 @@
 package com.sovon9.RRMS_Portal.service;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -11,9 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.HttpServerErrorException.ServiceUnavailable;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.sovon9.RRMS_Portal.dto.Reservation;
@@ -41,7 +44,7 @@ public class DashBoardService
 			 HttpHeaders headers = new HttpHeaders();
 		        headers.set("Authorization", "Bearer " + jwtToken);
        
-			responseEntity= fetchReservationForDashFilter(jwtToken, headers);
+			responseEntity= fetchReservationForDashFilter(status, headers);
 			if (responseEntity.getStatusCode() == HttpStatus.OK)
 			{
 				reservations = responseEntity.getBody();
@@ -56,11 +59,7 @@ public class DashBoardService
 			LOGGER.error("Unauthorized error while fetching dashboard data: " + e.getMessage());
 			// Handle 401 Unauthorized error specifically
 		}
-		catch (ResourceAccessException | HttpServerErrorException e) // checking for both bot available[reservation, redis service
-		{
-			LOGGER.error("Error while fetching dashboard data");
-			throw e;
-		}
+
 		return reservations;
 	}
 	
@@ -75,6 +74,32 @@ public class DashBoardService
 	public Reservation[] fallBackDashBoardData(String status, String jwtToken, Throwable throwable) {
 	    LOGGER.error("Fallback method called due to: {}", throwable.getMessage());
 	    return new Reservation[0];
+	}
+
+	public Map<String, Long> fetchCountGuestByStatus( String jwtToken)
+	{
+		Reservation[] fetchDashData = fetchDashBoardDataForRes("ALL", jwtToken);
+		return Arrays.stream(fetchDashData).collect(Collectors.groupingBy(res->chartStatus(res),Collectors.counting()));
+	}
+	
+	public String chartStatus(Reservation res)
+	{
+		if(res.getStatus().equals("RES"))
+		{
+			return "ARRIVING";
+		}
+		else if(res.getStatus().equals("REG"))
+		{
+			if(res.getDeptDate().equals(LocalDate.now()))
+			{
+				return "DEPARTING";
+			}
+			else
+			{
+				return "INHOUSE";
+			}
+		}
+		return null;
 	}
 	
 }

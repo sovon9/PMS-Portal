@@ -1,6 +1,7 @@
 package com.sovon9.RRMS_Portal.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -62,7 +63,7 @@ public class RRMSPortalController extends BaseController{
 	@Autowired
 	private ExtractJwtTokenFromCookie jwtTokenFromCookie;
 
-    @GetMapping({"/home","/home/status/{status}"})
+    @GetMapping("/home")
 	public String home(Model model, HttpServletRequest request, @PathVariable(value="status", required = false) String status)
 	{
     	String jwtToken = jwtTokenFromCookie.extractJwtFromCookie(request);
@@ -78,18 +79,27 @@ public class RRMSPortalController extends BaseController{
 		return "home";
 	}
     
-    @GetMapping("/fetchDashboardData/status/{status}")
-    public Reservation[] fetchDashBoardDataForRes(@PathVariable("status") String status, HttpServletRequest request)
+    @ResponseBody
+    @GetMapping("/home/status/{status}")
+	public  Reservation[] fetchDashBoardData(Model model, HttpServletRequest request, @PathVariable(value="status", required = false) String status)
+	{
+    	String jwtToken = jwtTokenFromCookie.extractJwtFromCookie(request);
+    	// fetch reservation data from res service
+    	return dashBoardService.fetchDashBoardDataForRes(status==null?ResConstants.RES_STATUS:status, jwtToken);
+	}
+    
+    /**
+     * For Guest Chart in dashboard
+     * @param request
+     * @return
+     */
+    @GetMapping("/guest-status-data")
+    @ResponseBody
+    public Map<String, Long> getGuestStatusData(HttpServletRequest request) 
     {
     	String jwtToken = jwtTokenFromCookie.extractJwtFromCookie(request);
-    	return dashBoardService.fetchDashBoardDataForRes(status, jwtToken);
-    }
-    
-    @PostMapping("/checkin")
-    public String performCheckInRes(@ModelAttribute("res") Reservation res, HttpServletRequest request)
-    {
-    	res.setStatus(ResConstants.REG_STATUS);
-    	return "modifyReservation";
+    	Map<String, Long> fetchCountGuestByStatus = dashBoardService.fetchCountGuestByStatus(jwtToken);
+		return fetchCountGuestByStatus;
     }
     
     @GetMapping("/create-res")
@@ -97,12 +107,11 @@ public class RRMSPortalController extends BaseController{
 	{
 		Reservation reservation = new Reservation();
 		reservation.setStatus(ResConstants.RES_STATUS);
-		//  Rateplan changes
-		//List<RatePlanRoomMappingDto> ratePlans = List.of(new RatePlanRoomMappingDto(1,"12REGA"));
 		String jwtToken = jwtTokenFromCookie.extractJwtFromCookie(request);
-		List<RoomDto> allRateplanRoomData = roomsService.getAllRateplanRoomData(jwtToken);
+		
+		//  fetch only VC rooms for availability
+		List<RoomDto> allRateplanRoomData = roomsService.getAllAvlRateplanRoomData(jwtToken);
 	    model.addAttribute("ratePlans", allRateplanRoomData);
-		//
 		model.addAttribute("res", reservation);
 		return "createReservation";
 	}
@@ -192,11 +201,16 @@ public class RRMSPortalController extends BaseController{
        if(reservationData.getStatusCode() == HttpStatus.OK)
        {
     	   Reservation reservation = reservationData.getBody();
-    	   reservation.setStatus(ResConstants.MOD);
+    	   //reservation.setStatus(ResConstants.MOD);
            model.addAttribute("res",reservation);
+           List<RoomDto> allAvlRateplanRoomData = new ArrayList<>();
+           allAvlRateplanRoomData.addAll(roomsService.getAllAvlRateplanRoomData(jwtToken));
+           allAvlRateplanRoomData.add(new RoomDto(reservation.getRoomnum(), reservation.getRatePlan()));
+   	       model.addAttribute("ratePlans", allAvlRateplanRoomData);
        }
    	   return "modifyReservation";
    	}
+    
     @PostMapping("/modify-res")
    	public String modifyReservation(@ModelAttribute("res") Reservation model, HttpServletRequest request)
    	{
@@ -208,7 +222,7 @@ public class RRMSPortalController extends BaseController{
     	model.setStatus(ResConstants.MOD);
     	// setting the header values
     	HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
 
 		HttpEntity<Reservation> requestEntity = new HttpEntity<Reservation>(model, headers);
 
@@ -226,9 +240,17 @@ public class RRMSPortalController extends BaseController{
    	public String modifyResPage(Model model, HttpServletRequest request)
    	{
     	model.addAttribute("res",new Reservation());
+    	model.addAttribute("ckin",true);
    	   return "modifyReservation";
    	}
-    
+    ///////		Check-In		///////
+    @PostMapping("/checkin")
+    public String performCheckInRes(@ModelAttribute("res") Reservation res, HttpServletRequest request)
+    {
+    	res.setStatus(ResConstants.REG_STATUS);
+    	return "modifyReservation";
+    }
+    /////////////
     @ResponseBody
     @GetMapping("/fetchRes")
     public List<Reservation> fetchResData(@RequestParam(name="resID", required = false) Long resID, HttpServletRequest request)
@@ -238,7 +260,7 @@ public class RRMSPortalController extends BaseController{
     			.queryParam("resID", resID)
     			.toUriString();
     	HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
         headers.set("Authorization", ResConstants.BEARER + jwtToken);
         
         ResponseEntity<Reservation[]> responseEntity = reservationService.searchReservation(url, headers);
@@ -273,11 +295,10 @@ public class RRMSPortalController extends BaseController{
     	   .toUriString();
     	   
     	   HttpHeaders headers = new HttpHeaders();
-           headers.set("Content-Type", "application/json");
+           headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
            headers.set("Authorization", ResConstants.BEARER + jwtToken); // adding JWT token to header
            
     	   //HttpEntity<ReservationSearchDTO> requestBody = new HttpEntity<>(res, headers);
-           LOGGER.error("url==> "+url);
     	   ResponseEntity<Reservation[]> responseEntity = reservationService.searchReservation(url, headers);
     	   if (responseEntity.getStatusCode() == HttpStatus.OK)
     	   {

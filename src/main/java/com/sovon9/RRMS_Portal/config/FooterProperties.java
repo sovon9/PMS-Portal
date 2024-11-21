@@ -1,4 +1,4 @@
-package com.sovon9.RRMS_Portal.service;
+package com.sovon9.RRMS_Portal.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
