@@ -32,7 +32,7 @@
         <a th:href="@{/portal/home}"><button class="nav-button">Home</button></a>
         <a th:href="@{/portal/create-res}" ><button class="nav-button">Create Reservation</button></a>
         <a th:href="@{/portal/search-res}" ><button class="nav-button">Search Reservation</button></a>
-        <a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a>
+        <!--<a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a> -->
         <a th:href="@{/portal/guest-profile-update}" ><button class="nav-button">Guest Profile Update</button></a>
         <a th:href="@{/portal/room-management}"><button  class="nav-button">Room Management</button></a>
         <a th:href="@{/portal/admin}" th:if="${agentRole.contains('ROLE_ADMIN')}"><button  class="nav-button admin-button">Administration</button></a>
@@ -65,9 +65,9 @@
 				<div style="color: green; background-color: lime;" th:if="${success}">
 					<p th:text="${success}"></p>
 				</div>
-				<input type="text" id="resID" th:value="${resID}" style="display:none;">
 			</div>
 		    <form th:action="@{/portal/save-guest}" th:object="${guest}" method="post">
+    			<input type="text" id="resID" name="resID" th:value="${resID}" style="display:none;">
     			<div class="modifyRes-form-items">
 					<div class="modifyRes-form-items-label">
 						<div>
@@ -127,7 +127,7 @@
 					</div>
 					</div>
 		            <div class="modifyRes-form-buttons">
-		                        <button type="submit" class="btn btn-success">Save</button>
+		                        <button type="submit" class="btn btn-success" id="saveGHInfo">Save</button>
 		            </div>
 		    </form>
         </div>
@@ -341,6 +341,7 @@
    	 		window.location.href="/portal/modify-res/resID/"+resID;
    		 }
      }
+    
  </script>
 </body>
 </html>

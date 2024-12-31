@@ -6,7 +6,47 @@
     <link rel="stylesheet" href="/styles.css"> <!-- Link to external CSS -->
 </head>
 <body>
-   <span th:text="${session['agentName']}" ></span>
+  <button id="api" onclick="callApi()">GET</button>
+  <button id="post" >POST</button>
+<script type="text/javascript">
+async function callApi()
+{
+        const response = await fetch("https://api.restful-api.dev/objects",
+        {
+            method:"GET",
+            headers:{"Content-Type":"application/json"},
+        });
+        alert(response.status);
+        if(response.ok)
+        {
+            var body = await response.json();
+            alert(JSON.stringify(body));
+        }
+}
 
+document.getElementById("post").onclick=async function()
+{
+   const response=await fetch("https://api.restful-api.dev/objects",
+		   {
+				"method":"POST",
+				"headers": {"Content-Type":"application/json"},
+				"body": JSON.stringify(
+						{
+							"name":"SS",
+							"data":{
+								"year":2024,
+								"price":200,
+								"CPU model":"Ryzen",
+								"Hard disk size":"1 TB"
+							}
+						})
+		   });
+   if(response.ok)
+   {
+       var body = await response.json();
+       alert(JSON.stringify(body));
+   }
+}
+</script>
 </body>
 </html>

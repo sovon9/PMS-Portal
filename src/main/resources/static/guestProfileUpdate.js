@@ -93,7 +93,7 @@ document.getElementById("searchGuestSubmitBtn").onclick = async function() {
 	});
 	if(response.ok)
 	{
-		var guests = await response.json();
+		var guests = await response.json(); // parse json
 		if (guests.length === 0) {
 			resetResponse();
 			document.getElementById("error").innerText="No Guests Found";
@@ -110,9 +110,19 @@ document.getElementById("searchGuestSubmitBtn").onclick = async function() {
 					var row = "<tr onclick='openEditGuestProfile("+guestJson+")'>" +
 						"<td>" + guest.guestID + "</td>" +
 						"<td>" + guest.firstName + "</td>" +
-						"<td>" + guest.lastName + "</td>" +
-						"<td>" + guest.birthDate + "</td>" +
-						"<td>" + guest.phno + "</td>";
+						"<td>" + guest.lastName + "</td>" ;
+						if(null!=guest.birthDate)
+						{
+							row+="<td>" + guest.birthDate + "</td>";
+						}
+						if(null!=guest.phno)
+						{
+							row+="<td>" + guest.phno + "</td>";
+						}
+						if(null!=guest.email)
+						{
+							row+="<td>" + guest.email + "</td>";
+						}
 						if(null!=guest.address)
 						{
 						     row+="<td>" + guest.address.postalcode + "</td>";
@@ -139,6 +149,10 @@ function openEditGuestProfile(guest)
     if(guestObject.phno)
     {
     	document.getElementById("phno").value = guestObject.phno;
+    }
+    if(guestObject.email)
+    {
+    	document.getElementById("email").value = guestObject.email;
     }
     if (guestObject.address) {
         document.getElementById("guestPincode").value = guestObject.address.postalcode;

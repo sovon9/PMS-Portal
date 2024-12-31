@@ -24,7 +24,7 @@
                 window.location.href = '/portal/home';
             } else {
             	// Update the error message in the UI
-                document.getElementById('error-message').innerText = 'Invalid username or password';
+                document.getElementById('error-message').style.display = "block";
             }
         }
     </script>
@@ -104,7 +104,7 @@
         <div class="login-box">
             <div class="login-form">
                 <h1>Login</h1>
-                <div th:if="${param.error}" style="color: red;" id="error-message">Invalid username or password.</div>
+                <div style="color: red; display:none;" id="error-message">Invalid username or password.</div>
                 <p>Please login to your account</p>
                 <form onsubmit="login(event)" th:object="${login}">
                     <label for="username">Username</label>

@@ -19,7 +19,9 @@ public class Reservation implements Serializable{
 	private Long rrID;
 	private Long resID;
 	private Long guestID;
+	@Pattern(regexp = "[a-zA-Z]+")
 	private String firstName;
+	@Pattern(regexp = "[a-zA-Z]+")
 	private String lastName;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate createDate;
@@ -40,7 +42,6 @@ public class Reservation implements Serializable{
 	private String paymentType;
 	@Pattern(regexp = "\\d{16}", message = "Card number must be 16 digits")
     private String cardNumber;
-	@FutureOrPresent(message = "Card expiry must be in the future or present")
     private String cardExpiry;
 
 	public Reservation() {

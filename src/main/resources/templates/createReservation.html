@@ -32,7 +32,7 @@
         <a th:href="@{/portal/home}"><button class="nav-button">Home</button></a>
         <a th:href="@{/portal/modify-res}" ><button class="nav-button">Modify Reservation</button></a>
         <a th:href="@{/portal/search-res}" ><button class="nav-button">Search Reservation</button></a>
-        <a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a>
+        <!--<a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a>-->
         <a th:href="@{/portal/guest-profile-update}" ><button class="nav-button">Guest Profile Update</button></a>
         <a th:href="@{/portal/room-management}"><button  class="nav-button">Room Management</button></a>
         <a th:href="@{/portal/admin}" th:if="${agentRole.contains('ROLE_ADMIN')}"><button  class="nav-button admin-button">Administration</button></a>
@@ -126,15 +126,15 @@
                 <div>
                 	<select id="ratePlan" th:field="*{ratePlan}" required>
 							<option value="">Select Rate Plan</option>
-							<option th:each="plan : ${ratePlans}" th:value="${plan.ratePlan}"
-								th:text="${plan.ratePlan}"></option>
+							<option th:each="plan : ${ratePlans}" th:value="${plan}"
+								th:text="${plan}"></option>
 					     </select>
                 </div>
                 <div>
                 	<input type="number" id="roomnum" th:field="*{roomnum}" placeholder="Enter Room Number" >
                 </div>
                 <div class="search-container">
-                	<input type="text" id="guestID" th:field="*{guestID}" placeholder="Enter Guest ID" disabled="disabled">
+                	<input type="text" id="guestID" th:field="*{guestID}" placeholder="Enter Guest ID" readonly="readonly">
                 	<button type="button" id="searchGuestBtn" class="btn btn-outline-secondary">
                     	      <span class="material-icons">search</span>
                     	 </button>
@@ -261,7 +261,7 @@
 			</div>
 			<div class="row mt-4">
 				<div class="col text-center">
-					<small>&copy; 2024 PMS. All Rights Reserved.</small>
+					<small>&copy; 2024 StayEase PMS. All Rights Reserved.</small>
 				</div>
 			</div>
 		</div>

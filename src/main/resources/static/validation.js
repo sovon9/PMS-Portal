@@ -35,3 +35,18 @@ function validateCardNum(event)
     }
     return true;
 }
+
+var arriveDate = document.getElementById("arriveDate");
+arriveDate.onchange=function()
+{
+	arriveDateVal=arriveDate.value;
+	if(arriveDateVal)
+	{
+		var selectedDate = new Date(arriveDateVal);
+		var nextDay = new Date(selectedDate);
+		nextDay.setDate(selectedDate.getDate()+1);
+		// Format the next day to YYYY-MM-DD (required for the date input)
+        const nextDayFormatted = nextDay.toISOString().split("T")[0];
+		document.getElementById("deptDate").min=nextDayFormatted;
+	}
+};

@@ -1,5 +1,7 @@
 package com.sovon9.RRMS_Portal.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,10 @@ import com.sovon9.RRMS_Portal.dto.RegisterUserRequest;
 import com.sovon9.RRMS_Portal.service.ExtractJwtTokenFromCookie;
 import com.sovon9.RRMS_Portal.service.RegisterUserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 
+@Tag(name = "Admin Controller", description = "Admin management APIs")
 @Controller
 @RequestMapping("/portal")
 public class AdminController extends BaseController
@@ -33,8 +37,16 @@ public class AdminController extends BaseController
 	@GetMapping("/admin")
 	public String getAdminPage(Model model)
 	{
-		model.addAttribute("register", new RegisterUserRequest());
-		return "administration";
+		if (model.containsAttribute("agentRole"))
+		{
+			List<String> roles = (List<String>) model.getAttribute("agentRole");
+			if(roles.contains("ROLE_ADMIN"))
+			{
+				model.addAttribute("register", new RegisterUserRequest());
+				return "administration";
+			}
+		}
+		return "access-denied";
 	}
 	
 	@PostMapping("/register")

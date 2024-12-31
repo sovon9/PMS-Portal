@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -25,8 +26,10 @@ import com.sovon9.RRMS_Portal.dto.GuestDto;
 import com.sovon9.RRMS_Portal.service.ExtractJwtTokenFromCookie;
 import com.sovon9.RRMS_Portal.service.GuestInfoService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 
+@Tag(name = "Guest Info Controller", description = "GuestInfo Management APIs")
 @Controller
 @RequestMapping("/portal")
 public class GuestProfileController extends BaseController
@@ -113,7 +116,7 @@ public class GuestProfileController extends BaseController
     }
     
     @PostMapping("/save-guest")
-    public String saveGuestData(@ModelAttribute("guest") GuestDto guest, Model model, HttpServletRequest request)
+    public String saveGuestData(@ModelAttribute("guest") GuestDto guest, Model model, HttpServletRequest request, @RequestParam(name = "resID", required = false) Long resID)
 	{
 		if (null != guest && null != guest.getGuestID())
 		{
@@ -127,6 +130,11 @@ public class GuestProfileController extends BaseController
 			ResponseEntity<GuestDto> entity = guestInfoService.saveGuestData(url, guest, headers);
 			if (entity.getStatusCode() == HttpStatus.CREATED)
 			{
+				model.addAttribute("guest", entity.getBody());
+				if(null!=resID)
+				{
+					model.addAttribute("resID",resID);
+				}
 				model.addAttribute("success", "Guest Info saved successfully!");
 			}
 			else
@@ -139,6 +147,10 @@ public class GuestProfileController extends BaseController
 		{
 			// if guestid or guest data not populated correctly
 			model.addAttribute("error", "No Guest Details/Guest ID populate properly");
+		}
+		if(null!=resID)
+		{
+			return "modifyReservationGHInfo";
 		}
 		return "guestProfileUpdate";
 	}

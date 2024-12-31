@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.sovon9.RRMS_Portal.constants.ResConstants;
 import com.sovon9.RRMS_Portal.dto.Reservation;
 
 import io.github.resilience4j.retry.annotation.Retry;
@@ -43,11 +44,35 @@ public class DashBoardService
 		{
 			 HttpHeaders headers = new HttpHeaders();
 		        headers.set("Authorization", "Bearer " + jwtToken);
-       
-			responseEntity= fetchReservationForDashFilter(status, headers);
+	        if(status.equals(ResConstants.DEP_STATUS_CODE))
+	        {
+	        	responseEntity= fetchReservationForDashFilter("REG", headers);
+	        }
+			else
+			{
+				responseEntity = fetchReservationForDashFilter(status, headers);
+			}
+	        
 			if (responseEntity.getStatusCode() == HttpStatus.OK)
 			{
 				reservations = responseEntity.getBody();
+				if (status.equals(ResConstants.RES_STATUS))
+				{
+					responseEntity = fetchReservationForDashFilter(ResConstants.MOD_STATUS, headers);
+					if (responseEntity.getStatusCode() == HttpStatus.OK)
+					{
+						Reservation[] reservations2 = responseEntity.getBody();
+						Reservation[] arrReservations = new Reservation[reservations.length+reservations2.length];
+						System.arraycopy(reservations, 0, arrReservations, 0, reservations.length);
+						System.arraycopy(reservations2, 0, arrReservations, reservations.length, reservations2.length);
+						reservations = arrReservations;
+					}
+				}
+				if(status.equals(ResConstants.DEP_STATUS_CODE))
+				{
+					reservations = Arrays.stream(reservations).filter(res->res.getDeptDate()
+							.equals(LocalDate.now())).toArray(Reservation[]::new);
+				}
 			}
 			else
 			{
@@ -65,7 +90,7 @@ public class DashBoardService
 	
 	public ResponseEntity<Reservation[]> fetchReservationForDashFilter(String status, HttpHeaders headers)
 	{
-		LOGGER.debug("fetching................");
+		LOGGER.debug("fetching dashboard data for status: {}",status);
 	    HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 		return restTemplate.exchange(
 				RES_SERVICE_URL+"reservaion/status/"+status, HttpMethod.GET, httpEntity, Reservation[].class);
@@ -76,19 +101,26 @@ public class DashBoardService
 	    return new Reservation[0];
 	}
 
+	@Retry(name="guestCount", fallbackMethod = "fallbackCountGuestByStatus")
 	public Map<String, Long> fetchCountGuestByStatus( String jwtToken)
 	{
 		Reservation[] fetchDashData = fetchDashBoardDataForRes("ALL", jwtToken);
 		return Arrays.stream(fetchDashData).collect(Collectors.groupingBy(res->chartStatus(res),Collectors.counting()));
 	}
 	
+	public Map<String, Long> fallbackCountGuestByStatus( String jwtToken, Exception e)
+	{
+		LOGGER.error("fallback method called for fetchCountGuestByStatus: {}"+e.getMessage());
+		return Map.of();
+	}
+	
 	public String chartStatus(Reservation res)
 	{
-		if(res.getStatus().equals("RES"))
+		if(res.getStatus().equals(ResConstants.RES_STATUS) || res.getStatus().equals(ResConstants.MOD_STATUS))
 		{
 			return "ARRIVING";
 		}
-		else if(res.getStatus().equals("REG"))
+		else if(res.getStatus().equals(ResConstants.REG_STATUS))
 		{
 			if(res.getDeptDate().equals(LocalDate.now()))
 			{

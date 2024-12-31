@@ -18,9 +18,11 @@ import org.springframework.web.client.RestTemplate;
 import com.sovon9.RRMS_Portal.dto.LoginRequest;
 import com.sovon9.RRMS_Portal.dto.LoginResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Tag(name = "Login/Logout Controller", description = "Login/Logout Management APIs")
 @Controller
 @RequestMapping("/portal")
 public class LoginLogoutController

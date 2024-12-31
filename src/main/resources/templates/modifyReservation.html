@@ -32,7 +32,7 @@
         <a th:href="@{/portal/home}"><button class="nav-button">Home</button></a>
         <a th:href="@{/portal/create-res}" ><button class="nav-button">Create Reservation</button></a>
         <a th:href="@{/portal/search-res}" ><button class="nav-button">Search Reservation</button></a>
-        <a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a>
+        <!--<a th:href="@{/portal/guest-batch-update}" ><button class="nav-button">Guest Batch Update</button></a>-->
         <a th:href="@{/portal/guest-profile-update}" ><button class="nav-button">Guest Profile Update</button></a>
         <a th:href="@{/portal/room-management}"><button  class="nav-button">Room Management</button></a>
         <a th:href="@{/portal/admin}" th:if="${agentRole.contains('ROLE_ADMIN')}"><button  class="nav-button admin-button">Administration</button></a>
@@ -108,7 +108,7 @@
 		            		<div>
 		            			<input type="text" id="resID" th:field="*{resID}" required readonly="readonly" class="disabled">
 		                         <button type="button" class="btn btn-outline-secondary" id="searchRes">
-		                             <span class="material-icons">search</span>
+		                             <span class="material-icons" style="color:white">search</span>
 		                         </button>
 		            		</div>
 		            		<div>
@@ -152,7 +152,8 @@
 	        	</div>
 		            <div class="modifyRes-form-buttons">
 		                        <button type="submit" class="btn btn-success">SAVE</button>
-		                        <button type="submit" id="doCheckIn" class="btn btn-warning" th:if="${ckin}" formaction="/portal/checkin" onclick="doCheckIn">Check-In</button>
+		                        <button type="submit" id="doCheckIn" class="btn btn-warning" th:if="*{status=='RES' or status == 'MOD'}" formaction="/portal/checkin" onclick="doCheckIn">Check-In</button>
+		                        <button type="submit" id="doCheckOut" class="btn btn-warning" th:if="*{status=='REG'}" formaction="/portal/checkout" onclick="doCheckOut">Check-Out</button>
 		            </div>
 		    </form>
         </div>
@@ -268,7 +269,7 @@
 			</div>
 			<div class="row mt-4">
 				<div class="col text-center">
-					<small>&copy; 2024 PMS. All Rights Reserved.</small>
+					<small>&copy; 2024 StayEase PMS. All Rights Reserved.</small>
 				</div>
 			</div>
 		</div>
@@ -278,6 +279,8 @@
      var resSearch = document.getElementById("resSearchModal");
      var searchRes = document.getElementById("searchRes");
      var close = document.getElementById("close");
+     var doCheckOut = document.getElementById("doCheckOut");
+     
      searchRes.onclick = function()
      {
      	resSearch.style.display="block";
@@ -294,36 +297,39 @@
      async function fetchResData()
      {
     	var rsResID = document.getElementById("rsResID").value;
-    	const params = new URLSearchParams({resID: rsResID});
-     	const response = await fetch('/portal/fetchRes?'+params.toString(),{
-     		method: "GET",
-     		headers: {
-     			'Content-Type': 'application/json'
-     		}
-     	});
-   			var reservations = await response.json();
-   			var resInfoBody = document.getElementById("resInfoBody");
-   			resInfoBody.innerHTML="";
-   			reservations.forEach(function(res)
-   					{
-   						var row = document.createElement("tr");
-   						row.addEventListener('click', function() {
-   		                    rowClicked(res);
-   		                });
-   						row.innerHTML="<td>" + res.resID + "</td>" +
-                        "<td>" + res.firstName + "</td>" +
-                        "<td>" + res.lastName + "</td>" +
-                        "<td>" + res.status + "</td>" +
-                        "<td>" + res.arriveDate + "</td>" +
-                        "<td>" + res.deptDate + "</td>" +
-                        "<td>" + res.roomnum + "</td>";
-   			   			resInfoBody.appendChild(row);
-   					});
+    	if(rsResID)
+   		{
+	    	const params = new URLSearchParams({resID: rsResID});
+	     	const response = await fetch('/portal/fetchRes?'+params.toString(),{
+	     		method: "GET",
+	     		headers: {
+	     			'Content-Type': 'application/json'
+	     		}
+	     	});
+	   			var reservations = await response.json();
+	   			var resInfoBody = document.getElementById("resInfoBody");
+	   			resInfoBody.innerHTML="";
+	   			reservations.forEach(function(res)
+	   					{
+	   						var row = document.createElement("tr");
+	   						row.addEventListener('click', function() {
+	   		                    rowClicked(res);
+	   		                });
+	   						row.innerHTML="<td>" + res.resID + "</td>" +
+	                        "<td>" + res.firstName + "</td>" +
+	                        "<td>" + res.lastName + "</td>" +
+	                        "<td>" + res.status + "</td>" +
+	                        "<td>" + res.arriveDate + "</td>" +
+	                        "<td>" + res.deptDate + "</td>" +
+	                        "<td>" + res.roomnum + "</td>";
+	   			   			resInfoBody.appendChild(row);
+	   					});
+   		}
      }
      
      function rowClicked(res)
      {
-    	 document.getElementById("resID").value=res.resID;
+    	 /*document.getElementById("resID").value=res.resID;
     	 document.getElementById("firstName").value=res.firstName;
     	 document.getElementById("lastName").value=res.lastName;
     	 document.getElementById("status").value=res.status;
@@ -333,8 +339,12 @@
     	 document.getElementById("deptTime").value=res.deptTime;
     	 document.getElementById("roomnum").value=res.roomnum;
     	 document.getElementById("guestID").value=res.guestID;
-    	 document.getElementById("title-name").innerText=res.firstName;
-    	 resSearch.style.display="none";
+    	 document.getElementById("title-name").innerText=res.firstName; */
+    	 if(res.resID)
+   		 {
+	    	 window.location.href = '/portal/modify-res/resID/'+res.resID;
+	    	 resSearch.style.display="none";
+   		 }
      }
      
      function doCheckIn()
@@ -366,11 +376,6 @@
    		 {
    	 		window.location.href="/portal/guest-info/guestID/"+guestID+"/resID/"+resID;
    		 }
-    	 /*const response = await fetch("/portal/search-guest/guestID/"+guestID,
-    			 {
-    		 		 method:"GET",
-    		 		 headers:{"Content-Type":"application/json"},
-    			 });*/
      }
      
  </script>

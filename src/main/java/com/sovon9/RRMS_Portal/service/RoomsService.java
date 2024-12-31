@@ -2,6 +2,7 @@ package com.sovon9.RRMS_Portal.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -67,6 +68,7 @@ public class RoomsService
 		return List.of();
 	}
 
+	@Retry(name="retry-Rateplan", fallbackMethod = "fallBackRateplanRoomData")
 	public List<RoomDto> getAllBlkdRateplanRoomData(String jwtToken)
 	{
 		List<RoomDto> blkdRoomList = new ArrayList<>();
@@ -88,5 +90,17 @@ public class RoomsService
 			LOGGER.error("Error fetching RatePlan RoomData : "+e.getMessage());
 		}
 		return blkdRoomList;
+	}
+	
+	@Retry(name = "avl-rateplanRoom", fallbackMethod = "fallBackAvlRatePlanRoom")
+	public Set<String> getAllAvlRateplanData(String jwtToken)
+	{
+		List<RoomDto> roomData = getAllAvlRateplanRoomData(jwtToken);
+		return roomData.stream().map(r->r.getRatePlan()).collect(Collectors.toSet());
+	}
+	
+	public Set<String> fallBackAvlRatePlanRoom(String jwtToken, Throwable throwable)
+	{
+		return Set.of();
 	}
 }
